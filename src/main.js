@@ -1,22 +1,19 @@
 import Phaser from 'phaser';
+import { Scene1 } from './assets/scripts/scene1';
 
 const config = {
     type: Phaser.WEBGL,
-    width: 800,
-    height: 600,
-    
-    scene: {
-        preload,
-        create,
-        update
-    }
+    width: 872,
+    height: 470,
+    backgroundColor: 'green',
+    scene: Scene1 
 };
 
 new Phaser.Game(config);
-
+/*
 function preload() {
   this.load.image('player','src/assets/sprites/1.png')
-  this.load.image('scene','')
+  this.load.image('scene','src/assets/sprites/scene/1.png')
 
 }
 function create() {
@@ -25,6 +22,6 @@ function create() {
 }
 function update() {
 
-}
+}*/
 
 
