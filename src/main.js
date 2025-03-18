@@ -16,7 +16,7 @@ new Phaser.Game(config);
 
 function preload() {
   this.load.image('player','src/assets/sprites/1.png')
-  this.load.image('scene')
+  this.load.image('scene','')
 
 }
 function create() {
