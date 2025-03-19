@@ -1,27 +1,22 @@
-import Phaser from 'phaser';
-import { Scene1 } from './assets/scripts/scene1';
+import Phaser, { Physics } from 'phaser';
+import { MainScene } from './assets/scripts/mainScene';
 
 const config = {
     type: Phaser.WEBGL,
     width: 872,
     height: 470,
+    physics:{
+      default: 'arcade',
+      arcade:{
+        gravity: {y: 0},
+        debug: true,
+        
+      }
+    },
     backgroundColor: 'green',
-    scene: Scene1 
+    scene:  MainScene
 };
 
 new Phaser.Game(config);
-/*
-function preload() {
-  this.load.image('player','src/assets/sprites/1.png')
-  this.load.image('scene','src/assets/sprites/scene/1.png')
-
-}
-function create() {
-  this.add.image(400, 300, 'player')
-
-}
-function update() {
-
-}*/
 
 
