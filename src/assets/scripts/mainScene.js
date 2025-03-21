@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { Player } from "./player.js";
 import { Mesa } from "./mesa.js";
 import { BagCoffee } from "./bagCoffee.js";
+import { Truck } from "./truck.js";
 
 export class MainScene extends Phaser.Scene{
     constructor(){
@@ -46,7 +47,7 @@ export class MainScene extends Phaser.Scene{
         this.load.image("mesa","src/assets/sprites/mesa/1.png");
         this.load.image("nieve","src/assets/sprites/scene/342.png");
         this.load.image("nieve-piso","src/assets/sprites/scene/529.png");
-        this.load.image("camion","src/assets/sprites/camion/1.png");
+        this.load.image("truck","src/assets/sprites/camion/1.png");
 
     }
     create(){
@@ -73,7 +74,8 @@ export class MainScene extends Phaser.Scene{
         this.add.image(0, 435, "nieve").setOrigin(0, 0);
 
         //Cargamos el camion
-        this.add.image(590, 70, "camion").setOrigin(0, 0);
+        this.truck = new Truck(this, 590, 70, "truck");
+        this.truck.setOrigin(0, 0);
         
 
         //Cargamos la bolsa de cafe
@@ -87,14 +89,10 @@ export class MainScene extends Phaser.Scene{
             
         });
         
-        
-
-        //Establece cosas fijas
-        
-
         //Agregar fisicas
         this.physics.add.collider(this.player, this.mesa,this.player.handleCollisionWithTable,null,this.player);
         
+        this.physics.add.collider(this.player,this.truck);
 
 
        

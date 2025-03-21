@@ -26,7 +26,7 @@ export class BagCoffee extends Phaser.Physics.Arcade.Sprite {
                 ],
                 frameRate: 5,
                 repeat: -1  
-            });
+            }); 
 
         }
 
