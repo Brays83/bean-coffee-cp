@@ -52,7 +52,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
     update(){
         //Verificamos si tenemos vidas (Probar poner en la colision con sacos)
-        if(this.lives > 0){
+        if(this.lives > 0 && this.bagCoffee <=5){
                 // Capturo el puntero
             let pointer = this.scene.input.activePointer;
             //muevo al jugador
@@ -95,19 +95,28 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
         //Cambiamos la textura del jugador con menos sacos
         if (this.bagCoffee >= 6) {
-            //Restamos una vida
-            this.lives -= 1;
             //Destruimos el ultimo saco
             this.scene.bagCoffee.destroy();
+
+            //Restamos una vida
+            this.lives -= 1;
+            
             //Cambiamos textura
             this.setTexture("player-coffe-tired");
             //Reseteamos la carga de sacos del player
             this.bagCoffee = 0;
+            console.log(`sacos de cafe despues de la caida ${this.bagCoffee}`)
+
             //Esperamos 3 segundos
-            this.scene.time.delayedCall(3000, () => {
-                console.log("Han pasado 3 segundos");
-                this.setTexture("player-free");
-            });
+            if(this.lives <= 0){
+                this.scene.time.delayedCall(5000, () => {
+                    this.scene.scene.restart();
+                });
+            }else{
+                this.scene.time.delayedCall(5000, () => {
+                    this.setTexture("player-free");
+                });
+            }
             
         } else {
             this.setTexture("player-coffe" + this.bagCoffee);

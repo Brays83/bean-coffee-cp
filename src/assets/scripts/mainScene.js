@@ -84,7 +84,7 @@ export class MainScene extends Phaser.Scene{
         });
 
         this.input.keyboard.on("keydown-" + "R", () => {
-            this.scene.restart();
+            
         });
         
         
