@@ -33,12 +33,12 @@ export class Truck extends Phaser.Physics.Arcade.Sprite {
 
         //this.scene.physics.world.enable(bag);
         
-        
-
         bag.body.setAllowGravity(true);
+
+        let velocityRandom = Phaser.Math.Between(-100,-300);
         
         //Velocidad de la bolsa de café izquierda
-        bag.setVelocity(-100, -500);
+        bag.setVelocity(velocityRandom, -500);
 
         //Aumento gravedad
         bag.body.setGravityY(900);
@@ -48,11 +48,16 @@ export class Truck extends Phaser.Physics.Arcade.Sprite {
 
     spawnOfBags(){
         let randomNumberY = Phaser.Math.Between(100,300);
-        console.log(`numero randon ${randomNumberY}`);
+
+        /*
         let bag = this.scene.bagsCoffee.get(
-            this.scene.truck.x ,
+            this.scene.truck.x + 50 ,
             randomNumberY
-        );
+        );*/
+        let bag = new BagCoffee(this.scene, this.scene.truck.x + 50, randomNumberY, "bag0");
+        this.scene.bagsCoffee.push(bag);
+
+        this.scene.physics.add.existing(bag);
 
         if(bag){
             

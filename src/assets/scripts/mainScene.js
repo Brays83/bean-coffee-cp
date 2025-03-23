@@ -10,6 +10,7 @@ export class MainScene extends Phaser.Scene{
 
         this.score = 0;
 
+        this.bagsCoffee = [];
         
         /**
          * Pixeles de la escena
@@ -25,6 +26,7 @@ export class MainScene extends Phaser.Scene{
         this.load.image("bag0","src/assets/sprites/bag/1.png");
         this.load.image("bag1","src/assets/sprites/bag/2.png");
         this.load.image("bag2","src/assets/sprites/bag/3.png");
+        this.load.image("bag_destroy","src/assets/sprites/bag_destroy/1.png");
 
         this.load.image("bag-table-0","src/assets/sprites/bag/497.png");
         this.load.image("bag-table-1","src/assets/sprites/bag/496.png");
@@ -55,6 +57,8 @@ export class MainScene extends Phaser.Scene{
         this.load.audio("beanbagLand","src/assets/sounds/13_sound_beanbagLand.mp3");
         this.load.audio("beanbagPlace","src/assets/sounds/12_sound_beanbagPlace.mp3");
         this.load.audio("beanCounters","src/assets/sounds/1_sound_beanCounters.mp3");
+        this.load.audio("splopBag","src/assets/sounds/6_sound_splopbag.mp3");
+        
         
     }
     create(){
@@ -67,6 +71,7 @@ export class MainScene extends Phaser.Scene{
 
         //Caargamos la nieve del piso
         this.add.image(140, 380, "nieve-piso").setOrigin(0, 0);
+        //this.physics.add.staticImage(140, 380, "nieve-piso").setOrigin(0, 0);
 
         //Cargamos el jugador
         //new Player(*Envio escena actual*, *Posicion x*, *Posicion y*, *Envio Textura*);
@@ -78,20 +83,23 @@ export class MainScene extends Phaser.Scene{
         this.mesa.setOrigin(0,0)
 
         //Cargamos la nieve
-        this.add.image(0, 435, "nieve").setOrigin(0, 0);
+        //this.add.image(0, 435, "nieve").setOrigin(0, 0);
+        this.nieve = this.physics.add.staticImage(0, 435, "nieve")
+        .setOrigin(0, 0);
+        this.nieve.body.setSize(872,50).setOffset(435,40);
+        
 
         //Cargamos el camion
         this.truck = new Truck(this, 590, 70, "truck");
         this.truck.setOrigin(0, 0);
 
 
-        //Creo un grupo de colisiones de las bolsas de cafe
+        //Creo un grupo de colisiones de las bolsas de cafe 
         //this.bagsCoffee = this.physics.add.group();
-        this.bagsCoffee = this.physics.add.group({
+        /*this.bagsCoffee = this.physics.add.group({
             classType: BagCoffee,
-            /*defaultKey: "bag0",*/
             runChildUpdate: true,
-        });
+        });*/
         
 
         //Cargamos la bolsa de cafe
@@ -99,7 +107,7 @@ export class MainScene extends Phaser.Scene{
             
             this.truck.spawnOfBags();
 
-            console.log(`lanzar bolsa de cafe: ${this.bagsCoffee.getLength()}`);
+            
             /*
             let bagCoffee = new BagCoffee(this, 600, 300, "bag0");
 
@@ -123,16 +131,16 @@ export class MainScene extends Phaser.Scene{
         
         this.physics.add.collider(this.player,this.truck);
 
-        /*
-        this.physics.add.overlap(this.player, this.bagsCoffee, this.player.handleCollisionWithBag, null, this.player);
-        */
-        
-        
-
-        
-        
-
-       
+        this.physics.add.collider(this.bagsCoffee, this.nieve, (bag, nieve) => {
+            
+            if (bag instanceof BagCoffee) {
+                console.log("✔ Es una instancia de BagCoffee");
+                bag.handleCollisionWithNieve();
+            } else {
+                console.error("❌ bag NO es una instancia de BagCoffee");
+            }
+            
+        });
 
         /**
          * Crear variable local
@@ -148,12 +156,7 @@ export class MainScene extends Phaser.Scene{
         console.log(`vidas del pinguino: ${this.player.lives}`)
         this.player.update();
 
-        //Reproducir musica
-
-        
-        
-        
-
-        
+        //Reproducir musica 
     }
+
 }

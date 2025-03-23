@@ -12,6 +12,8 @@ export class BagCoffee extends Phaser.Physics.Arcade.Sprite {
 
         
 
+        
+
         this.scene.physics.add.existing(this);
         this.scene.add.existing(this)
 
@@ -47,6 +49,8 @@ export class BagCoffee extends Phaser.Physics.Arcade.Sprite {
 
         
 
+        
+
         this.play("bag-animations");
     }
 
@@ -62,5 +66,27 @@ export class BagCoffee extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
             this.destroy(); 
         }
+    }
+
+    handleCollisionWithNieve(){
+        console.log("Bolsa toca el piso")
+        this.body.enable = false;
+
+        this.scene.sound.play("splopBag");
+
+        //Cambiamos textura de la bolsa a destruida
+        this.setTexture("bag_destroy");
+        //Detenemos la bolsa
+        this.setVelocity(0,0);
+        //Ejecutamos funcion
+        this.scene.tweens.add({
+            targets: this,
+            alpha: { from: 1, to: 0 }, // Opacidad de 100% a 0%
+            duration: 1500, // Tiempo en milisegundos
+            ease: "Linear",
+            onComplete: () => { 
+                this.destroy(); // Destruye el objeto cuando termine el tween
+            }
+        });
     }
 }
