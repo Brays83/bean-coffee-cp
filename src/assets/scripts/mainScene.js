@@ -7,7 +7,10 @@ import { Truck } from "./truck.js";
 export class MainScene extends Phaser.Scene{
     constructor(){
         super("MainScene");
+
         this.score = 0;
+
+        
         /**
          * Pixeles de la escena
          * 872
@@ -49,10 +52,14 @@ export class MainScene extends Phaser.Scene{
         this.load.image("nieve-piso","src/assets/sprites/scene/529.png");
         this.load.image("truck","src/assets/sprites/camion/1.png");
 
+        this.load.audio("beanbagLand","src/assets/sounds/13_sound_beanbagLand.mp3");
+        this.load.audio("beanbagPlace","src/assets/sounds/12_sound_beanbagPlace.mp3");
+        this.load.audio("beanCounters","src/assets/sounds/1_sound_beanCounters.mp3");
+        
     }
     create(){
 
-        
+        this.sound.play("beanCounters");
         
         //  Cargamos el escenario base
         this.add.image(0, 0, "scene").setOrigin(0, 0);
@@ -76,24 +83,54 @@ export class MainScene extends Phaser.Scene{
         //Cargamos el camion
         this.truck = new Truck(this, 590, 70, "truck");
         this.truck.setOrigin(0, 0);
+
+
+        //Creo un grupo de colisiones de las bolsas de cafe
+        //this.bagsCoffee = this.physics.add.group();
+        this.bagsCoffee = this.physics.add.group({
+            classType: BagCoffee,
+            /*defaultKey: "bag0",*/
+            runChildUpdate: true,
+        });
         
 
         //Cargamos la bolsa de cafe
         this.input.keyboard.on("keydown-" + "SPACE", (e) => {
-            this.bagCoffee = new BagCoffee(this, 600, 300, "bag0");
-            this.bagCoffee.setOrigin(0,0);
-            this.physics.add.collider(this.player, this.bagCoffee,this.player.handleCollisionWithBag,null,this.player);
-        });
-
-        this.input.keyboard.on("keydown-" + "R", () => {
             
+            this.truck.spawnOfBags();
+
+            console.log(`lanzar bolsa de cafe: ${this.bagsCoffee.getLength()}`);
+            /*
+            let bagCoffee = new BagCoffee(this, 600, 300, "bag0");
+
+            this.bagsCoffee.add(bagCoffee);
+            bagCoffee.setOrigin(0,0);
+            */
+
         });
         
-        //Agregar fisicas
+
+        //Agregar colision al grupo de bolsas de cafe
+        
+        //Overlap se usa mejor para recoletar objetos
+        this.physics.add.overlap(this.player, this.bagsCoffee, (player, bag) => 
+            {
+            player.handleCollisionWithBag(bag);
+            },null,this.player);
+        
+        //Collider se usa mejor para interactuar con objetos golpes
         this.physics.add.collider(this.player, this.mesa,this.player.handleCollisionWithTable,null,this.player);
         
         this.physics.add.collider(this.player,this.truck);
 
+        /*
+        this.physics.add.overlap(this.player, this.bagsCoffee, this.player.handleCollisionWithBag, null, this.player);
+        */
+        
+        
+
+        
+        
 
        
 
@@ -110,6 +147,11 @@ export class MainScene extends Phaser.Scene{
         
         console.log(`vidas del pinguino: ${this.player.lives}`)
         this.player.update();
+
+        //Reproducir musica
+
+        
+        
         
 
         
