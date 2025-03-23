@@ -19,9 +19,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         //Añadir existencia en la escena
         this.scene.add.existing(this);
 
+        //this.setImmovable(true);
+
+        //No le afecta las fisicas
+        this.body.setAllowGravity(false);
+
+
         //Editar Box-Collider
         this.body.setSize(130, 130);
         this.body.setOffset(40, 50);
+        
+
+        
 
         //Creamos animacion del lloro
         this.crySprite = this.scene.add.sprite(this.x, this.y, "player-cry-0")
@@ -89,14 +98,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.crySprite.stop();
     }
 
-    handleCollisionWithBag(){
+    handleCollisionWithBag(bag){
+        console.log("Colision player con bolsa")
+
+        //Ejecutamos audio
+        this.scene.sound.play("beanbagLand");
+        
 
         this.bagCoffee += 1;
 
         //Cambiamos la textura del jugador con menos sacos
         if (this.bagCoffee >= 6) {
             //Destruimos el ultimo saco
-            this.scene.bagCoffee.destroy();
+            
+            bag.destroy();
 
             //Restamos una vida
             this.lives -= 1;
@@ -120,7 +135,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
             
         } else {
             this.setTexture("player-coffe" + this.bagCoffee);
-            this.scene.bagCoffee.destroy();
+            bag.destroy();
         }
 
         //Verificamos si el jugador tiene que llorar
@@ -146,8 +161,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
             //El click solo se activa una vez
             this.scene.input.once("pointerdown", () => {
+                
+                
+
                 //Verificamos q el jugador tenga sacos
                 if (this.bagCoffee >= 1) { 
+                    this.scene.sound.play("beanbagPlace");
                     this.bagCoffee -= 1;
                     console.log(`Bolsas de cafe luego de entregar: ${this.bagCoffee}`);
 

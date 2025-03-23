@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-
+import { BagCoffee } from "./bagCoffee.js";
 export class Truck extends Phaser.Physics.Arcade.Sprite {
 
     /**
@@ -18,14 +18,49 @@ export class Truck extends Phaser.Physics.Arcade.Sprite {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
 
+        //Desactivo las fisicas para el truck
+        this.body.setAllowGravity(false);
+
         this.body.setSize(130, 417);
         this.body.setOffset(80, 0);
 
         this.setImmovable(true);
     }
 
-    handleMovementBags(){
+    handleLaunch(bag){
+        bag.setActive(true);
+        bag.setVisible(true);
 
+        //this.scene.physics.world.enable(bag);
+        
+        
+
+        bag.body.setAllowGravity(true);
+        
+        //Velocidad de la bolsa de café izquierda
+        bag.setVelocity(-100, -500);
+
+        //Aumento gravedad
+        bag.body.setGravityY(900);
+
+        
+    }
+
+    spawnOfBags(){
+        let randomNumberY = Phaser.Math.Between(100,300);
+        console.log(`numero randon ${randomNumberY}`);
+        let bag = this.scene.bagsCoffee.get(
+            this.scene.truck.x ,
+            randomNumberY
+        );
+
+        if(bag){
+            
+            this.handleLaunch(bag);
+        }
+
+
+        
 
     }
 

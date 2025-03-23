@@ -10,11 +10,26 @@ export class BagCoffee extends Phaser.Physics.Arcade.Sprite {
         this.y = y;
         this.texture = texture;
 
-        this.scene.physics.add.existing(this);
+        
 
+        this.scene.physics.add.existing(this);
         this.scene.add.existing(this)
 
-        this.setImmovable(true);
+        this.setImmovable(false);
+
+        //Objeto inactivo y invisible
+        this.setActive(false);
+        this.setVisible(false);
+
+        this.body.setSize(102, 30);
+        this.body.setOffset(0,10);
+
+        //Activa la fisica
+        this.body.setAllowGravity(true);
+
+
+        
+        
         if(!this.scene.anims.exists("bag-animations")){
 
             this.scene.anims.create({
@@ -25,7 +40,7 @@ export class BagCoffee extends Phaser.Physics.Arcade.Sprite {
                     {key: "bag2"}
                 ],
                 frameRate: 5,
-                repeat: -1  
+                repeat: 0  
             }); 
 
         }
@@ -33,5 +48,19 @@ export class BagCoffee extends Phaser.Physics.Arcade.Sprite {
         
 
         this.play("bag-animations");
+    }
+
+    
+
+    update(){
+        if (this.x < -50) {
+            this.setActive(false);
+            this.setVisible(false);
+            this.destroy();
+        }else if(this.y > 470){
+            this.setActive(false);
+            this.setVisible(false);
+            this.destroy(); 
+        }
     }
 }

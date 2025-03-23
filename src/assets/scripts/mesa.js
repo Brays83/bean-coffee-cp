@@ -23,7 +23,11 @@ export class Mesa extends Phaser.Physics.Arcade.Sprite {
         //Hacer inamovible la mesa y con colision
         this.setImmovable(true);
 
+        //la mesa existe en la escena
         this.scene.add.existing(this);
+
+        //Desactivo las fisicas para el truck
+        this.body.setAllowGravity(false);
 
 
     }
