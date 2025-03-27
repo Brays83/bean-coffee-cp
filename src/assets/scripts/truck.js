@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { BagCoffee } from "./bagCoffee.js";
+import { Item } from "./item.js";
 export class Truck extends Phaser.Physics.Arcade.Sprite {
 
     /**
@@ -15,6 +16,9 @@ export class Truck extends Phaser.Physics.Arcade.Sprite {
         this.y = y;
         this.texture = texture;
 
+        this.velocitysXOptions = [-270,-200,-60];
+        this.randonItem = ["fish","anvil","vase"];
+
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
 
@@ -27,18 +31,20 @@ export class Truck extends Phaser.Physics.Arcade.Sprite {
         this.setImmovable(true);
     }
 
-    handleLaunch(bag){
+    handleLaunchBag(bag){
         bag.setActive(true);
         bag.setVisible(true);
 
         //this.scene.physics.world.enable(bag);
         
         bag.body.setAllowGravity(true);
+        let randonIndex = Phaser.Math.Between(0,2);
 
-        let velocityRandom = Phaser.Math.Between(-100,-300);
+        let velocityX = this.velocitysXOptions[randonIndex];
+
         
         //Velocidad de la bolsa de café izquierda
-        bag.setVelocity(velocityRandom, -500);
+        bag.setVelocity(velocityX, -500);
 
         //Aumento gravedad
         bag.body.setGravityY(900);
@@ -46,23 +52,101 @@ export class Truck extends Phaser.Physics.Arcade.Sprite {
         
     }
 
-    spawnOfBags(){
+    handleLaunchItems(item){
+        item.setActive(true);
+        item.setVisible(true);
+
+        //this.scene.physics.world.enable(bag);
+        
+        item.body.setAllowGravity(true);
+
+        let randonIndex = Phaser.Math.Between(0,2);
+
+        let velocityX = this.velocitysXOptions[randonIndex];
+        
+        //Velocidad de la bolsa de café izquierda
+        item.setVelocity(velocityX, -500);
+
+        //Aumento gravedad
+        item.body.setGravityY(950);
+
+        
+    }
+
+    spawnOfItems(){
+        //Variable para la probabilidad de que salga un objeto
+        let probability = Phaser.Math.Between(0,100) <= 70; //Probabilidad del 70% salga bolsa
         let randomNumberY = Phaser.Math.Between(100,300);
 
-        /*
-        let bag = this.scene.bagsCoffee.get(
-            this.scene.truck.x + 50 ,
-            randomNumberY
-        );*/
-        let bag = new BagCoffee(this.scene, this.scene.truck.x + 50, randomNumberY, "bag0");
-        this.scene.bagsCoffee.push(bag);
+        if(probability){
+            let bag = new BagCoffee(this.scene, this.x + 50, randomNumberY, "bag0");
+            this.scene.bagsCoffee.push(bag);
+            this.scene.physics.add.existing(bag);
+            this.handleLaunchBag(bag);
+        }else{
 
-        this.scene.physics.add.existing(bag);
+            let probabilityItem = Phaser.Math.Between(0,100) ;
+            let probabilityRango = [
+                {max:60,type:"fish"},//60%
+                {max:80,type:"anvil"},//20%
+                {max:100,type:"vase"}//20%
+            ]
+            let chosenObjectType = null;
+            
+            for(let range of probabilityRango){
+                if(probabilityItem <= range.max){
+                    chosenObjectType = range.type;
+                    break;
+                }
+            }
+
+            //no se genera nada si es null
+            if (!chosenObjectType) return;
+            
+
+            let item = new Item(this.scene,this.x + 50,randomNumberY,chosenObjectType);
+            
+            if (chosenObjectType === "fish") item.body.setSize(135, 30);
+            if (chosenObjectType === "anvil") item.body.setSize(100, 30);
+            if (chosenObjectType === "vase") item.body.setSize(45, 100);
+            
+            this.scene.items.push(item);
+            this.scene.physics.add.existing(item);
+            this.handleLaunchItems(item);
+        }
+
+        /*
+
+        let fish = new Item(this.scene,this.x + 50,randomNumberY,"fish");
+        let anvil = new Item(this.scene,this.x + 50,randomNumberY,"anvil");
+        let vase = new Item(this.scene,this.x + 50,randomNumberY,"vase");
+        
+
+        fish.body.setSize(135, 30);
+        vase.body.setSize(45, 100);
+
+        anvil.body.setSize(100, 30);
+
+        
+        this.scene.items.push(fish);
+        this.scene.items.push(anvil);
+        this.scene.items.push(vase);
+
+        
+        this.scene.physics.add.existing(fish);
+        this.scene.physics.add.existing(anvil);
+        this.scene.physics.add.existing(vase);
 
         if(bag){
             
-            this.handleLaunch(bag);
-        }
+            
+            this.handleLaunchItems(fish);
+            this.handleLaunchItems(anvil);
+            this.handleLaunchItems(vase);
+
+        }*/
+
+        
 
 
         
