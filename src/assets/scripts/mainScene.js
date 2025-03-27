@@ -8,9 +8,18 @@ export class MainScene extends Phaser.Scene{
     constructor(){
         super("MainScene");
 
+        this.fontSettings = { 
+            fontFamily: 'ui_Player', 
+            fontSize: '32px',
+            stroke: '#000000',
+            color: '#ffffff',
+            strokeThickness: 4 
+        }
+
         this.score = 0;
 
         this.bagsCoffee = [];
+        this.items = [];
         
         /**
          * Pixeles de la escena
@@ -21,6 +30,8 @@ export class MainScene extends Phaser.Scene{
     }
 
     preload(){
+        this.load.font("ui_Player","src/assets/fonts/16_Klickclack.ttf")
+
         this.load.image("scene","src/assets/sprites/scene/1.png");
 
         this.load.image("bag0","src/assets/sprites/bag/1.png");
@@ -54,10 +65,33 @@ export class MainScene extends Phaser.Scene{
         this.load.image("nieve-piso","src/assets/sprites/scene/529.png");
         this.load.image("truck","src/assets/sprites/camion/1.png");
 
+        this.load.image("bang_0","src/assets/sprites/Bang/1.png");
+        this.load.image("bang_1","src/assets/sprites/Bang/2.png");
+        this.load.image("bang_2","src/assets/sprites/Bang/3.png");
+        this.load.image("bang_3","src/assets/sprites/Bang/4.png");
+        this.load.image("bang_4","src/assets/sprites/Bang/5.png");
+        this.load.image("bang_5","src/assets/sprites/Bang/6.png");
+        this.load.image("bang_6","src/assets/sprites/Bang/7.png");
+
         this.load.audio("beanbagLand","src/assets/sounds/13_sound_beanbagLand.mp3");
         this.load.audio("beanbagPlace","src/assets/sounds/12_sound_beanbagPlace.mp3");
         this.load.audio("beanCounters","src/assets/sounds/1_sound_beanCounters.mp3");
         this.load.audio("splopBag","src/assets/sounds/6_sound_splopbag.mp3");
+
+        this.load.audio("anvil_floor","src/assets/sounds/10_sound_anvil.mp3");
+        this.load.audio("fish_floor","src/assets/sounds/5_sound_splop.mp3");
+        this.load.audio("vase_floor","src/assets/sounds/9_sound_vase.mp3");
+
+        this.load.audio("toon_hit","src/assets/sounds/3_sound_toonhit.mp3");
+        
+        
+
+        this.load.image("anvil","src/assets/sprites/anvil/196.png");
+        this.load.image("anvil_crack","src/assets/sprites/anvil/198.png");
+        this.load.image("fish","src/assets/sprites/fish/202.png");
+        this.load.image("fish_floor","src/assets/sprites/fish/204.png");
+        this.load.image("vase","src/assets/sprites/vase/189.png");
+        this.load.image("vase_floor","src/assets/sprites/vase/191.png");
         
         
     }
@@ -72,6 +106,10 @@ export class MainScene extends Phaser.Scene{
         //Caargamos la nieve del piso
         this.add.image(140, 380, "nieve-piso").setOrigin(0, 0);
         //this.physics.add.staticImage(140, 380, "nieve-piso").setOrigin(0, 0);
+
+        //UI Player
+        this.lives = this.add.text(50, 20, 'vidas:',this.fontSettings );
+        this.score = this.add.text(200, 20, 'puntaje:',this.fontSettings );
 
         //Cargamos el jugador
         //new Player(*Envio escena actual*, *Posicion x*, *Posicion y*, *Envio Textura*);
@@ -100,20 +138,16 @@ export class MainScene extends Phaser.Scene{
             classType: BagCoffee,
             runChildUpdate: true,
         });*/
+
+        
+
         
 
         //Cargamos la bolsa de cafe
         this.input.keyboard.on("keydown-" + "SPACE", (e) => {
             
-            this.truck.spawnOfBags();
-
-            
-            /*
-            let bagCoffee = new BagCoffee(this, 600, 300, "bag0");
-
-            this.bagsCoffee.add(bagCoffee);
-            bagCoffee.setOrigin(0,0);
-            */
+            this.truck.spawnOfItems();
+            console.log(`Objetos creados: ${this.objects}`);
 
         });
         
@@ -126,6 +160,10 @@ export class MainScene extends Phaser.Scene{
             player.handleCollisionWithBag(bag);
             },null,this.player);
         
+        this.physics.add.overlap(this.player,this.items,(player,item)=>{
+            player.handleCollisionWithItem(item);
+
+        },null,this.player);
         //Collider se usa mejor para interactuar con objetos golpes
         this.physics.add.collider(this.player, this.mesa,this.player.handleCollisionWithTable,null,this.player);
         
@@ -133,14 +171,13 @@ export class MainScene extends Phaser.Scene{
 
         this.physics.add.collider(this.bagsCoffee, this.nieve, (bag, nieve) => {
             
-            if (bag instanceof BagCoffee) {
-                console.log("✔ Es una instancia de BagCoffee");
-                bag.handleCollisionWithNieve();
-            } else {
-                console.error("❌ bag NO es una instancia de BagCoffee");
-            }
+            bag.handleCollisionWithNieve();
             
         });
+
+        this.physics.add.collider(this.items,this.nieve,(item) =>{
+            item.handleCollisionWithNieve();
+        })
 
         /**
          * Crear variable local
@@ -153,8 +190,10 @@ export class MainScene extends Phaser.Scene{
     }
     update(){
         
-        console.log(`vidas del pinguino: ${this.player.lives}`)
+        
         this.player.update();
+        console.log(`vidas: ${this.player.lives}`)
+        console.log(`Bolsas cargadas: ${this.player.bagCoffee}`)
 
         //Reproducir musica 
     }
