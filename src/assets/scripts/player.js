@@ -12,7 +12,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.bagCoffee = 0;
         this.lives = 3;
 
-        
+        //Establecemos las vidas y puntaje en la escena
+        this.scene.lives.setText(`Vidas: ${this.lives}`);
+
 
         //Añadir Fisicas
         this.scene.physics.add.existing(this);
@@ -98,6 +100,72 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.crySprite.stop();
     }
 
+    removeLives(){
+        this.lives -= 1;
+        this.scene.lives.setText(`Vidas: ${this.lives}`);
+    }
+
+    relive(){
+        
+        if(this.lives <= 0){
+            this.scene.time.delayedCall(4000, () => {
+                this.body.enable = true;
+                this.scene.scene.restart();
+            });
+        }else{
+            this.scene.time.delayedCall(3000, () => {
+                this.body.enable = true;
+                this.setTexture("player-free");
+            });
+        }
+
+    }
+
+
+    handleCollisionWithItem(item){
+        //Destruimos el objeto
+        item.destroy();
+        //Restamos una vida
+        this.removeLives();
+
+        //Eliminamos las bolsas del jugador
+        this.bagCoffee = 0;
+
+        //Movemos el item a la posicion final del item
+        item.bangSprite.x = this.x;
+        item.bangSprite.y = this.y;
+
+        //Empezamos animacion
+        item.startBangAnimation();
+        this.body.enable = false;
+
+        if(item.texture === "anvil"){
+            this.setTexture("player-anvil");
+            this.scene.sound.play("toon_hit");
+
+        }else if(item.texture === "fish"){
+            this.setTexture("player-fish");
+            this.scene.sound.play("toon_hit");
+
+        }else{
+            this.setTexture("player-vase");
+            this.scene.sound.play("toon_hit"); 
+
+        }
+
+        this.scene.time.delayedCall(2000, () => {
+            item.stopBangAnimation();
+        });
+    
+
+        
+
+        this.relive();
+        
+        
+        
+    }
+
     handleCollisionWithBag(bag){
         console.log("Colision player con bolsa")
 
@@ -109,12 +177,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
         //Cambiamos la textura del jugador con menos sacos
         if (this.bagCoffee >= 6) {
+            //
+
             //Destruimos el ultimo saco
             
             bag.destroy();
 
             //Restamos una vida
-            this.lives -= 1;
+            this.removeLives();
+
+            
             
             //Cambiamos textura
             this.setTexture("player-coffe-tired");
@@ -123,15 +195,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
             console.log(`sacos de cafe despues de la caida ${this.bagCoffee}`)
 
             //Esperamos 3 segundos
-            if(this.lives <= 0){
-                this.scene.time.delayedCall(5000, () => {
-                    this.scene.scene.restart();
-                });
-            }else{
-                this.scene.time.delayedCall(5000, () => {
-                    this.setTexture("player-free");
-                });
-            }
+            this.relive();
             
         } else {
             this.setTexture("player-coffe" + this.bagCoffee);
@@ -141,7 +205,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         //Verificamos si el jugador tiene que llorar
         if(this.bagCoffee >= 4){
             this.startCrying();
-
+        }else{
+            this.stopCrying();
         }
     }
 

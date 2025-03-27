@@ -14,6 +14,8 @@ export class Mesa extends Phaser.Physics.Arcade.Sprite {
 
         this.idAleatoryBag = 0;
 
+        this.scene.score.setText(`Puntaje: ${this.bagsCoffee}`);
+
         this.scene.physics.add.existing(this);
 
         //Cambiar Box Collider
@@ -37,6 +39,8 @@ export class Mesa extends Phaser.Physics.Arcade.Sprite {
         
         //Agrego una bolsa a la mesa
         this.bagsCoffee += 1;
+
+        this.scene.score.setText(`Puntaje: ${this.bagsCoffee*10}`);
         
         let newBagY = 358;
         let newBagX = 20;

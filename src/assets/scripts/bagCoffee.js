@@ -10,10 +10,6 @@ export class BagCoffee extends Phaser.Physics.Arcade.Sprite {
         this.y = y;
         this.texture = texture;
 
-        
-
-        
-
         this.scene.physics.add.existing(this);
         this.scene.add.existing(this)
 
