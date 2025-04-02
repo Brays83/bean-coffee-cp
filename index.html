@@ -4,10 +4,68 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/src/assets/sprites/ico/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    
+    <title>Cuenta Cafe</title>
   </head>
   <body>
     <div id="app"></div>
+
+    <button type="button" 
+    class="btn btn-primary" 
+    data-bs-toggle="modal"
+    data-bs-target ="#settingsModal" >
+      X
+    </button>
+
+    <div class="modal fade" id = "settingsModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h2>Configuracion de Probabilidades</h2>
+
+          </div>
+
+          <div class="modal-body">
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">Bolsas</span>
+              <input type="number" class="form-control" id="bag-coffee">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">Yunques</span>
+              <input type="number" class="form-control" id = "anvil">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">Floreros</span>
+              <input type="number" class="form-control" id="vase">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">Pescados</span>
+              <input type="number" class="form-control" id="fish">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">Bolsas</span>
+              <input type="number" class="form-control">
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="saveValues()">Guardar</button>
+         </div>
+      
+
+        </div>
+      </div>
+    </div>
+
+   
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

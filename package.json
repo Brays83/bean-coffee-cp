@@ -12,6 +12,7 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "phaser": "^3.88.2"
   }
 }

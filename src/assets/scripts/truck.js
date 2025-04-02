@@ -115,42 +115,6 @@ export class Truck extends Phaser.Physics.Arcade.Sprite {
             this.handleLaunchItems(item);
         }
 
-        /*
-
-        let fish = new Item(this.scene,this.x + 50,randomNumberY,"fish");
-        let anvil = new Item(this.scene,this.x + 50,randomNumberY,"anvil");
-        let vase = new Item(this.scene,this.x + 50,randomNumberY,"vase");
-        
-
-        fish.body.setSize(135, 30);
-        vase.body.setSize(45, 100);
-
-        anvil.body.setSize(100, 30);
-
-        
-        this.scene.items.push(fish);
-        this.scene.items.push(anvil);
-        this.scene.items.push(vase);
-
-        
-        this.scene.physics.add.existing(fish);
-        this.scene.physics.add.existing(anvil);
-        this.scene.physics.add.existing(vase);
-
-        if(bag){
-            
-            
-            this.handleLaunchItems(fish);
-            this.handleLaunchItems(anvil);
-            this.handleLaunchItems(vase);
-
-        }*/
-
-        
-
-
-        
-
     }
 
         

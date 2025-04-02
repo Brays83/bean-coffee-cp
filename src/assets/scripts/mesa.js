@@ -18,6 +18,8 @@ export class Mesa extends Phaser.Physics.Arcade.Sprite {
 
         this.scene.physics.add.existing(this);
 
+        
+
         //Cambiar Box Collider
         this.setSize(160, 100)
         this.setOffset(0,0);

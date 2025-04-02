@@ -4,6 +4,8 @@ import { Mesa } from "./mesa.js";
 import { BagCoffee } from "./bagCoffee.js";
 import { Truck } from "./truck.js";
 
+
+
 export class MainScene extends Phaser.Scene{
     constructor(){
         super("MainScene");
@@ -17,9 +19,9 @@ export class MainScene extends Phaser.Scene{
         }
 
         this.score = 0;
-
         this.bagsCoffee = [];
         this.items = [];
+        
         
         /**
          * Pixeles de la escena
@@ -96,6 +98,10 @@ export class MainScene extends Phaser.Scene{
         
     }
     create(){
+        //Obtenemos el valor del formulario
+
+
+        this.sound.stopAll();
 
         this.sound.play("beanCounters");
         
@@ -132,17 +138,6 @@ export class MainScene extends Phaser.Scene{
         this.truck.setOrigin(0, 0);
 
 
-        //Creo un grupo de colisiones de las bolsas de cafe 
-        //this.bagsCoffee = this.physics.add.group();
-        /*this.bagsCoffee = this.physics.add.group({
-            classType: BagCoffee,
-            runChildUpdate: true,
-        });*/
-
-        
-
-        
-
         //Cargamos la bolsa de cafe
         this.input.keyboard.on("keydown-" + "SPACE", (e) => {
             
@@ -165,7 +160,11 @@ export class MainScene extends Phaser.Scene{
 
         },null,this.player);
         //Collider se usa mejor para interactuar con objetos golpes
-        this.physics.add.collider(this.player, this.mesa,this.player.handleCollisionWithTable,null,this.player);
+        this.physics.add.collider(this.player, this.mesa, 
+            (player, mesa) => player.handleCollisionWithTable(mesa), 
+            null, 
+            this
+        );
         
         this.physics.add.collider(this.player,this.truck);
 
@@ -186,6 +185,14 @@ export class MainScene extends Phaser.Scene{
          * Crea variable global
          * this.fondo = this.add.image(0, 0, "scene").setOrigin(0, 0);
          */
+
+        // Evento para limpiar objetos cuando la escena se reinicia
+        this.events.on('shutdown', () => {
+            this.player.destroy();
+            this.mesa.destroy();
+        });
+
+  
 
     }
     update(){
